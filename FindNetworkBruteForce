@@ -23,3 +23,14 @@ index="btlo*" LogName=Security EventCode IN ("4625") Failure_Reason="Unknown use
 | bucket _time span=1m 
 | eval Account_Name=if(Account_Name="-", (mvindex(Account_Name,1)), Account_Name) 
 | stats count by _time, Account_Name, host , Source_Network_Address
+
+
+
+Result for the query is below.
+=============================================================================================================================
+
+_time	Account_Name	host	Source_Network_Address	count
+2016-09-20 02:50:00	Administrator	DESKTOP-M5SN04R	192.168.198.149	1195
+2016-09-20 02:50:00	JcDfcZTc	DESKTOP-M5SN04R	192.168.198.149	1
+2016-09-20 02:51:00	Administrator	DESKTOP-M5SN04R	192.168.198.149	1299
+2016-09-20 02:52:00	Administrator	DESKTOP-M5SN04R	192.168.198.149	1064
