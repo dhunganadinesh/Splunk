@@ -1,0 +1,25 @@
+```Events from https://github.com/sans-blue-team/DeepBlueCLI```
+
+``` Find Failed login```
+index="btlo*" LogName=Security EventCode IN ("4624", "4625", "4717", "4722", "4726", "4740") | stats count by EventCode, Failure_Reason
+
+
+```Unknown username of password has around 3500 events so look into it.```
+
+
+index="btlo*" LogName=Security EventCode IN ("4625") Failure_Reason="Unknown user name or bad password."
+
+BruteForce with time bucket of 5 minutes
+index="btlo*" LogName=Security EventCode IN ("4625") Failure_Reason="Unknown user name or bad password." | bucket _time span=1m | stats count by _time, Account_Name, host, Source_Network_Address
+
+
+https://community.splunk.com/t5/All-Apps-and-Add-ons/Example-of-how-to-detect-basic-brute-force-attacks/m-p/472914
+
+The above query provide Account_Name as -, but we need the second value of Account_Name from event 
+so using eval to get the second value.
+
+index="btlo*" LogName=Security EventCode IN ("4625") Failure_Reason="Unknown user name or bad password." Account_Name!=""
+| fields _time, Account_Name, host, Source_Network_Address 
+| bucket _time span=1m 
+| eval Account_Name=if(Account_Name="-", (mvindex(Account_Name,1)), Account_Name) 
+| stats count by _time, Account_Name, host , Source_Network_Address
